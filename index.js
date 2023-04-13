@@ -7,4 +7,6 @@ var todos_1 = require("./route/todos");
 var app = express();
 app.use(bodyParser.json());
 app.use(todos_1.default);
-app.listen(3000);
+app.listen(3000, function () {
+    console.log('server listing to 3000');
+});

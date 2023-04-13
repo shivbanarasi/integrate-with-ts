@@ -7,4 +7,6 @@ const app=express();
 app.use(bodyParser.json())
 
 app.use(todosRoute)
-app.listen(3000)
+app.listen(3000,()=>{
+    console.log('server listing to 3000')
+})
