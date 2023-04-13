@@ -10,10 +10,10 @@ route.get('/', function (req, res, next) {
     route.post('/todo', function (req, res) {
         var newTodo = {
             id: new Date().toISOString(),
-            text: req.body.test
+            text: req.body.text
         };
         todos.push(newTodo);
-        res.status(201).json({ massage: 'data inserted' });
+        res.status(201).json({ massage: 'data inserted', todos: todos });
     });
 });
 route.put('/todo/:todoId', function (req, res) {
@@ -23,9 +23,19 @@ route.put('/todo/:todoId', function (req, res) {
         todos[todoIndex] = { id: todos[todoIndex].id, text: req.body.text };
         return res.status(200).json({ massage: 'updated', todos: todos });
     }
-    res.status(404).json({ massage: 'could not find' });
+    return res.status(404).json({ massage: 'could not find' });
 });
 route.delete('/todo/:todoId', function (req, res) {
+    if (!req.params.todoId) {
+        res.status(404).json({ massage: 'id not found' });
+    }
+    todos = todos.filter(function (todoItem) { return todoItem.id !== req.params.todoId; });
+    res.status(200).json({ massage: 'deleted todo', todos: todos });
+});
+route.put('/todo/:todoId', function (req, res) {
+    if (!req.params.todoId) {
+        res.status(404).json({ massage: 'id not found' });
+    }
     todos = todos.filter(function (todoItem) { return todoItem.id !== req.params.todoId; });
     res.status(200).json({ massage: 'deleted todo', todos: todos });
 });
