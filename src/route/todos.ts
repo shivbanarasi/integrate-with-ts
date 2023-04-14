@@ -3,15 +3,21 @@ import {Todo} from '../models/todos'
 let todos:Todo[]=[]
 const route=Router();
 
+type RequestBody={text:string };
+type RequestParam={todoId:string};
+
+
+
 route.get('/',(req,res,next)=>{
   res.status(200).json({
     todos:todos,
   })  
 
   route.post('/todo',(req,res)=>{
+    const body=req.body as RequestBody
     const newTodo:Todo={
         id:new Date().toISOString(),
-        text:req.body.text
+        text:body.text
     }
     todos.push(newTodo);
     res.status(201).json({massage:'data inserted',todos:todos})
@@ -20,7 +26,9 @@ route.get('/',(req,res,next)=>{
 })
 
 route.put('/todo/:todoId',(req,res)=>{
-    const tid=req.params.todoId;
+  const params=req.body as RequestParam
+    const tid=params.todoId;
+    const body=req.body as RequestBody
     const todoIndex=todos.findIndex(todoItem=>todoItem.id===tid);
     if(todoIndex>=0){
        todos[todoIndex]={id:todos[todoIndex].id,text:req.body.text};
@@ -30,7 +38,8 @@ route.put('/todo/:todoId',(req,res)=>{
 })
 
 route.delete('/todo/:todoId',(req,res)=>{
-  if(!req.params.todoId){
+  const params=req.body as RequestParam
+  if(!params.todoId){
     res.status(404).json({massage:'id not found'})
   }
     todos=todos.filter(todoItem=>todoItem.id!==req.params.todoId);
@@ -38,7 +47,8 @@ route.delete('/todo/:todoId',(req,res)=>{
 
 })
 route.put('/todo/:todoId',(req,res)=>{
-  if(!req.params.todoId){
+  const params=req.body as RequestParam
+  if(!params.todoId){
     res.status(404).json({massage:'id not found'})
   }
     todos=todos.filter(todoItem=>todoItem.id!==req.params.todoId);
